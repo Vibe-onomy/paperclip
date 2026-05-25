@@ -79,7 +79,7 @@ ENV NODE_ENV=production \
   PAPERCLIP_DEPLOYMENT_MODE=authenticated \
   PAPERCLIP_DEPLOYMENT_EXPOSURE=private \
   OPENCODE_ALLOW_ALL_MODELS=true \
-  NODE_OPTIONS=--dns-result-order=ipv4first
+  NODE_OPTIONS=--no-network-family-autoselection
 
 EXPOSE 3100
 
