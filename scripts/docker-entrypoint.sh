@@ -26,4 +26,11 @@ if [ "$changed" = "1" ]; then
     chown -R node:node /paperclip
 fi
 
+# Register the allowed hostname derived from PAPERCLIP_PUBLIC_URL
+if [ -n "$PAPERCLIP_PUBLIC_URL" ]; then
+    ALLOWED_HOST=$(echo "$PAPERCLIP_PUBLIC_URL" | sed 's|https\?://||' | sed 's|:.*||' | sed 's|/.*||')
+    echo "Registering allowed hostname: $ALLOWED_HOST"
+    gosu node sh -c "cd /app && pnpm paperclipai allowed-hostname '$ALLOWED_HOST'" || true
+fi
+
 exec gosu node "$@"
