@@ -72,4 +72,13 @@ console.log('Config created. Allowed hostname:', hostname);
     fi
 fi
 
+# After the server starts, generate the first admin invite URL and print it to logs.
+# Only runs if no admin exists yet — safe to run on every boot.
+(
+  sleep 12
+  echo "=== Paperclip admin bootstrap ==="
+  gosu node sh -c "cd /app && pnpm paperclipai auth bootstrap-ceo" 2>&1 || true
+  echo "================================="
+) &
+
 exec gosu node "$@"
