@@ -72,13 +72,12 @@ console.log('Config created. Allowed hostname:', hostname);
     fi
 fi
 
-# After the server starts, generate the first admin invite URL and print it to logs.
-# Only runs if no admin exists yet — safe to run on every boot.
-(
-  sleep 12
-  echo "=== Paperclip admin bootstrap ==="
-  gosu node sh -c "cd /app && pnpm paperclipai auth bootstrap-ceo" 2>&1 || true
-  echo "================================="
-) &
+# Generate the first admin invite URL before starting the server.
+# bootstrap-ceo only needs the database, not a running server.
+# Safe to run on every boot — no-op if an admin already exists.
+echo "=== Paperclip admin bootstrap ==="
+gosu node node /app/cli/node_modules/tsx/dist/cli.mjs /app/cli/src/index.ts auth bootstrap-ceo \
+  --base-url "${PAPERCLIP_PUBLIC_URL:-http://localhost:3100}" 2>&1 || true
+echo "================================="
 
 exec gosu node "$@"
